@@ -9,7 +9,12 @@ import PostsList from './components/PostsList.vue';
     </h2>
   </header>
   <main>
-    <PostsList />
+    <Suspense>
+      <template #fallback>
+        <div>Loading...</div>
+      </template>
+      <PostsList />
+    </Suspense>
   </main>
 </template>
 

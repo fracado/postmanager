@@ -1,11 +1,18 @@
 <script setup>
+import { ref } from 'vue';
+
 const tableHeaders = ["Title", "Description", "Author"];
-const posts = [{
-  "userId": 2,
-  "id": 42,
-  "title": "dummy title",
-  "body": "dummy body"
-}]
+
+const posts = ref(null);
+await fetch('https://jsonplaceholder.typicode.com/posts')
+    .then((response) => {
+      if (response.status !== 200) {
+        throw response.status;
+      } else {
+        return response.json();
+      }
+    })
+    .then(async(data) => posts.value = await data);
 </script>
 
 <template>
