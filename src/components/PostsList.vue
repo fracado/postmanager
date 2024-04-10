@@ -1,7 +1,7 @@
 <script setup>
-import { ref } from 'vue';
-import ModalDialog from './ModalDialog.vue';
+import {defineEmits, ref} from 'vue';
 
+const emit = defineEmits(["form-open"]);
 const tableHeaders = ["Title", "Description", "Author", ""];
 
 const posts = ref(null);
@@ -14,35 +14,17 @@ await fetch('https://jsonplaceholder.typicode.com/posts')
       }
     })
     .then(async(data) => posts.value = await data);
-
-const isModalOpened = ref(false);
-
-const openModal = () => {
-  isModalOpened.value = true;
-};
-
-const closeModal = () => {
-  isModalOpened.value = false;
-};
-
-const submitHandler = () => {
-  console.log('submit');
-}
-
-const modalTitle = 'dummy title';
-const modalBody = 'dummy body';
 </script>
 
 <template>
   <div class="flex flex-col">
     <button
         type="button"
-        @click="openModal"
+        @click="emit('form-open', 'create')"
         class="ml-auto mr-0 self-end rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-400 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
     >
-      Open Modal
+      Create new post
     </button>
-    <ModalDialog :isOpen="isModalOpened" :title="modalTitle" :body="modalBody" @modal-close="closeModal" @submit="submitHandler" />
     <table id="posts-list" class="table-auto border-collapse border border-slate-500 text-sm mt-6">
       <thead class="bg-gray-700 text-white">
       <tr>
@@ -66,8 +48,13 @@ const modalBody = 'dummy body';
             </button>
             <template #content>
               <div class="flex flex-col">
-                <button class="mx-2 px-4 rounded-md border border-gray-300">Edit</button>
-                <button class="mx-2 px-4 rounded-md border border-gray-300">Delete</button>
+                <button
+                    @click="emit('form-open', 'edit')"
+                    class="p-2 my-0.5 hover:bg-gray-100"
+                >
+                  Edit
+                </button>
+                <button class="p-2 hover:bg-gray-100">Delete</button>
               </div>
             </template>
           </Popper>
@@ -87,7 +74,7 @@ const modalBody = 'dummy body';
   --popper-theme-border-style: solid;
   --popper-theme-border-color: #eeeeee;
   --popper-theme-border-radius: 6px;
-  --popper-theme-padding: 8px;
+  --popper-theme-padding: 1px;
   --popper-theme-box-shadow: 0 6px 30px -6px rgba(0, 0, 0, 0.25);
 }
 </style>

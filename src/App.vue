@@ -1,5 +1,22 @@
 <script setup>
-import PostsList from './components/PostsList.vue';
+import PostsList from '@/components/PostsList.vue';
+import PostForm from '@/components/PostForm.vue';
+import {ref} from "vue";
+
+const isFormOpened = ref(false);
+let formType = "";
+let postAuthors = [];
+
+const openForm = (type, authors) => {
+  formType = type;
+  postAuthors = authors;
+  isFormOpened.value = true;
+};
+
+const closeForm = () => {
+  isFormOpened.value = false;
+};
+
 </script>
 
 <template>
@@ -13,8 +30,9 @@ import PostsList from './components/PostsList.vue';
       <template #fallback>
         <div>Loading...</div>
       </template>
-      <PostsList />
+      <PostsList @form-open="openForm" />
     </Suspense>
+    <PostForm :isOpen="isFormOpened" :type="formType" :authors="postAuthors" @form-close="closeForm" />
   </main>
 </template>
 

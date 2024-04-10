@@ -1,25 +1,40 @@
 <script setup>
 import {defineEmits, defineProps} from "vue";
-defineProps({
+import ModalDialog from "@/components/ModalDialog.vue";
+
+const props = defineProps({
   isOpen: Boolean,
-  formHeader: String,
+  type: String,
 });
+
+const formHeaders = {
+  create: 'Create blog entry',
+  edit: 'Edit blog entry'
+};
+
+const submitButtonTexts = {
+  create: 'Create',
+  edit: 'Save changes'
+};
 
 const emit = defineEmits(["form-close"]);
 
 const closeForm = () => {
-  emit('form-close')
+  emit('form-close');
 }
 
 </script>
 
 <template>
+  <ModalDialog :isOpen="props.isOpen">
     <form
       :id="`${props.type}-form`"
       class="bg-white rounded pt-2 pb-1"
       >
       <div class="flex justify-between items-center pb-3">
-        <p class="text-2xl">{{formHeader}}</p>
+        <p class="text-2xl">
+          {{ formHeaders[props.type] }}
+        </p>
         <div @click.stop="emit('form-close')" class="form-close cursor-pointer z-50">
           <svg class="fill-current text-black" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
             <path d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z"></path>
@@ -72,8 +87,9 @@ const closeForm = () => {
         <button @click.stop="closeModal"
                 class="focus:outline-none px-4 bg-[#327AB7] p-3 ml-3 rounded-lg text-white hover:bg-opacity-90"
         >
-          Save Changes
+          {{ submitButtonTexts[props.type] }}
         </button>
       </div>
     </form>
+  </ModalDialog>
 </template>
