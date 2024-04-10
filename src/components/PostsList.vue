@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import ModalDialog from './ModalDialog.vue';
 
-const tableHeaders = ["Title", "Description", "Author"];
+const tableHeaders = ["Title", "Description", "Author", ""];
 
 const posts = ref(null);
 await fetch('https://jsonplaceholder.typicode.com/posts')
@@ -56,8 +56,38 @@ const modalBody = 'dummy body';
         <td class="text-center first-letter:uppercase py-3 px-2">{{post.title}}</td>
         <td class="text-left first-letter:uppercase py-3 px-2">{{post.body}}</td>
         <td class="text-center py-3 px-2">User #{{post.userId}}</td>
+        <td class="text-center py-3 px-2">
+          <Popper arrow zIndex="inherit">
+            <button
+                id="menu"
+                class="bg-transparent py-2 px-4 rounded inline-flex items-center"
+              >
+              <span class="mx-auto font-bold text-lg">&#xFE19;</span>
+            </button>
+            <template #content>
+              <div class="flex flex-col">
+                <button class="mx-2 px-4 rounded-md border border-gray-300">Edit</button>
+                <button class="mx-2 px-4 rounded-md border border-gray-300">Delete</button>
+              </div>
+            </template>
+          </Popper>
+        </td>
       </tr>
       </tbody>
     </table>
   </div>
 </template>
+
+<style>
+:root {
+  --popper-theme-background-color: #ffffff;
+  --popper-theme-background-color-hover: #ffffff;
+  --popper-theme-text-color: inherit;
+  --popper-theme-border-width: 1px;
+  --popper-theme-border-style: solid;
+  --popper-theme-border-color: #eeeeee;
+  --popper-theme-border-radius: 6px;
+  --popper-theme-padding: 8px;
+  --popper-theme-box-shadow: 0 6px 30px -6px rgba(0, 0, 0, 0.25);
+}
+</style>
