@@ -14,13 +14,18 @@ await fetch('https://jsonplaceholder.typicode.com/posts')
       }
     })
     .then(async(data) => posts.value = await data);
+
+const getAuthors = () => {
+  return [... new Set(posts.value.map(post => post.userId))];
+}
+
 </script>
 
 <template>
   <div class="flex flex-col">
     <button
         type="button"
-        @click="emit('form-open', 'create')"
+        @click="emit('form-open', 'create', getAuthors())"
         class="ml-auto mr-0 self-end rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-400 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
     >
       Create new post
@@ -49,7 +54,7 @@ await fetch('https://jsonplaceholder.typicode.com/posts')
             <template #content>
               <div class="flex flex-col">
                 <button
-                    @click="emit('form-open', 'edit')"
+                    @click="emit('form-open', 'edit', getAuthors())"
                     class="p-2 my-0.5 hover:bg-gray-100"
                 >
                   Edit
