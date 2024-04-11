@@ -1,5 +1,5 @@
 <script setup>
-import {defineEmits, defineProps} from "vue";
+import { defineEmits, defineProps, ref, computed } from "vue";
 import ModalDialog from "@/components/ModalDialog.vue";
 
 const props = defineProps({
@@ -18,12 +18,61 @@ const submitButtonTexts = {
   edit: 'Save changes'
 };
 
+const postTitle = ref("");
+const postBody = ref("");
+const postAuthor = ref(null);
+
 const emit = defineEmits(["form-close"]);
 
 const closeForm = () => {
   emit('form-close');
 }
 
+const errors = ref({});
+
+const isTitlePresent = computed(() => postTitle.value.trim() !== '');
+const isTitleValid = computed(() => postTitle.value.length <= 100);
+
+const isAuthorPresent = computed(() => postAuthor.value !== null);
+
+const isBodyPresent = computed(() => postBody.value.trim() !== '');
+const isBodyValid = computed(() => postBody.value.length <= 500);
+
+const validateTitle = () => {
+  errors.value.title = !isTitlePresent.value ? 'Title is required.' :
+      !isTitleValid.value ? 'Title cannot be longer than 100 characters.' :
+          null;
+};
+
+const validateAuthor = () => {
+  errors.value.author = !isAuthorPresent.value ? 'Author is required.' : null;
+};
+
+const validateBody = () => {
+  errors.value.body = !isBodyPresent.value ? 'Body is required.' :
+      !isBodyValid.value ? 'Body cannot be longer than 500 characters.' :
+          null;
+};
+
+const validateField = (field) => {
+  errors.value[field] = '';
+  if (field === 'title') validateTitle();
+  if (field === 'author') validateAuthor();
+  if (field === 'body') validateBody();
+};
+
+const submitForm = () => {
+  errors.value = {};
+  validateTitle();
+  validateAuthor();
+  validateBody();
+
+  if (Object.values(errors.value).every((error) => error === null)) {
+    console.log('validation successful');
+  } else {
+    console.log('validation failed');
+  }
+};
 </script>
 
 <template>
@@ -31,7 +80,8 @@ const closeForm = () => {
     <form
       :id="`${props.type}-form`"
       class="bg-white rounded pt-2 pb-1"
-      >
+      @submit.prevent="submitForm"
+    >
       <div class="flex justify-between items-center pb-3">
         <p class="text-2xl">
           {{ formHeaders[props.type] }}
@@ -48,17 +98,33 @@ const closeForm = () => {
           Title
         </label>
         <input
-            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            class="border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none"
+            :class="{'border-red-500': errors.title && (!isTitlePresent || !isTitleValid)}"
             id="title"
             type="text"
+            v-model="postTitle"
+            @input="validateField('title')"
+            @blur="validateField('title')"
         >
+        <span
+            class="error float-end mt-2 text-red-500 text-xs"
+            v-if="errors.title && (!isTitlePresent || !isTitleValid)"
+        >
+          {{ errors.title }}
+        </span>
       </div>
       <div class="mb-6">
         <label class="block text-sm mb-2" for="author">
           Author
         </label>
         <div class="relative">
-          <select class="block appearance-none w-full bg-white border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="author">
+          <select
+              class="block appearance-none w-full bg-white border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+              :class="{'border-red-500': errors.author && !isAuthorPresent}"
+              id="author"
+              v-model="postAuthor"
+              @blur="validateField('author')"
+          >
             <option
                 v-for="(author, index) in props.authors"
                 :key="index"
@@ -70,17 +136,33 @@ const closeForm = () => {
           <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
             <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
           </div>
+          <span
+              class="error float-end mt-2 text-red-500 text-xs"
+              v-if="errors.author && !isAuthorPresent"
+          >
+          {{ errors.author }}
+        </span>
         </div>
       </div>
-      <div class="mb-8">
+      <div class="mb-7">
         <label class="block text-sm mb-2" for="body">
           Body
         </label>
-        <input
-            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        <textarea
+            rows="10"
+            class="border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none"
+            :class="{'border-red-500': errors.body && (!isBodyPresent || !isBodyValid)}"
             id="body"
-            type="text"
+            v-model="postBody"
+            @input="validateField('body')"
+            @blur="validateField('body')"
+        />
+        <span
+            class="error float-end text-red-500 text-xs"
+            v-if="errors.body && (!isBodyPresent || !isBodyValid)"
         >
+          {{ errors.body }}
+        </span>
       </div>
       <hr class="h-px my-2 bg-gray-200 border-0">
       <div class="flex justify-end pt-2">
