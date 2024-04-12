@@ -37,9 +37,26 @@ export default function useFetch() {
 			})
 	}
 
+	const updatePost = async (id, data) => {
+		return await fetch(`https://jsonplaceholder.typicode.com/posts/${id}`, {
+			method: 'PUT',
+			body: JSON.stringify(data),
+			headers: {
+				'Content-type': 'application/json; charset=UTF-8',
+			},
+		}).then((response) => {
+			if (!response.ok) {
+				throw response.status;
+			} else {
+				return response.json();
+			}
+		})
+	}
+
 	return {
 		getPosts,
 		getPost,
 		createPost,
+		updatePost,
 	}
 }

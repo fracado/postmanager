@@ -1,17 +1,26 @@
 <script setup>
-import { defineEmits, defineProps, ref, computed } from "vue";
+import { defineEmits, defineProps, ref, computed, onBeforeUpdate, onUpdated } from "vue";
 import useFetch from "@/composables/useFetch";
 import ModalDialog from "@/components/ModalDialog.vue";
 
 const props = defineProps({
   isOpen: Boolean,
-  type: String,
-  authors: Array,
-  postId: Number || null,
+  type: {
+    type: String,
+    default: "create",
+  },
+  authors: {
+    type: Array,
+    default: () => [],
+  },
+  id: {
+    type: Number || null,
+    default: null,
+  }
 });
 
-const { createPost, getPost } = useFetch();
-const postId = props.postId;
+const { createPost, getPost, updatePost } = useFetch();
+const postId = ref(null);
 
 const formHeaders = {
   create: 'Create blog entry',
@@ -27,13 +36,24 @@ const postTitle = ref("");
 const postBody = ref("");
 const postAuthor = ref(null);
 
-if (postId) {
-  getPost(postId).then(async(data) => {
-    postTitle.value = await data.title;
-    postBody.value = await data.body;
-    postAuthor.value = await data.userId;
-  });
-}
+onBeforeUpdate(() => {
+  // to clear form data when modal is closed
+  postTitle.value = "";
+  postBody.value = "";
+  postAuthor.value = null;
+});
+
+onUpdated(() => {
+  postId.value = props.id;
+
+  if (postId.value) {
+    getPost(postId.value).then(async(data) => {
+      postTitle.value = await data.title;
+      postBody.value = await data.body;
+      postAuthor.value = await data.userId;
+    });
+  }
+});
 
 const emit = defineEmits(["form-close", "alert-show"]);
 
@@ -81,17 +101,26 @@ const submitForm = async() => {
   validateBody();
 
   if (Object.values(errors.value).every((error) => error === null)) {
-    const formData = {
+    let formData = {
       title: postTitle.value,
       body: postBody.value,
       userId: postAuthor.value,
     }
 
-    await createPost(formData).then(() => {
-      emit('alert-show', 'success', 'Success!', 'Post created successfully.');
-    }).catch(() => {
-      emit('alert-show', 'error', 'Error!', 'Post creation failed.');
-    });
+    if (props.type === 'edit') {
+      formData = { id: postId.value, ...formData };
+      await updatePost(postId.value, formData).then(() => {
+        emit('alert-show', 'success', 'Success!', 'Post updated successfully.');
+      }).catch(() => {
+        emit('alert-show', 'error', 'Error!', 'Post update failed.');
+      })
+    } else {
+      await createPost(formData).then(() => {
+        emit('alert-show', 'success', 'Success!', 'Post created successfully.');
+      }).catch(() => {
+        emit('alert-show', 'error', 'Error!', 'Post creation failed.');
+      });
+    }
   } else {
     console.log('validation failed');
   }

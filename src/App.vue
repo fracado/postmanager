@@ -11,12 +11,13 @@ let postAuthors = [];
 let alertType = "";
 let alertTitle = "";
 let alertText = "";
-let postId = null;
+
+const postId = ref(null);
 
 const openForm = (type, authors, id = null) => {
   formType = type;
   postAuthors = authors;
-  postId = id;
+  postId.value = id;
   isFormOpened.value = true;
 };
 
