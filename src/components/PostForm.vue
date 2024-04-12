@@ -25,7 +25,7 @@ const postTitle = ref("");
 const postBody = ref("");
 const postAuthor = ref(null);
 
-const emit = defineEmits(["form-close"]);
+const emit = defineEmits(["form-close", "alert-show"]);
 
 const closeForm = () => {
   emit('form-close');
@@ -78,8 +78,9 @@ const submitForm = async() => {
     }
 
     await createPost(formData).then(() => {
-      console.log('post created');
-      closeModal();
+      emit('alert-show', 'success', 'Success!', 'Post created successfully.');
+    }).catch(() => {
+      emit('alert-show', 'error', 'Error!', 'Post creation failed.');
     });
   } else {
     console.log('validation failed');
