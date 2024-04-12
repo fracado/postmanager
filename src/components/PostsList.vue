@@ -1,23 +1,22 @@
 <script setup>
 import {defineEmits, ref} from 'vue';
+import useFetch from "@/composables/useFetch";
 
 const emit = defineEmits(["form-open"]);
 const tableHeaders = ["Title", "Description", "Author", ""];
+const { getPosts } = useFetch();
 
 const posts = ref(null);
-await fetch('https://jsonplaceholder.typicode.com/posts')
-    .then((response) => {
-      if (response.status !== 200) {
-        throw response.status;
-      } else {
-        return response.json();
-      }
-    })
-    .then(async(data) => posts.value = await data);
+const uniqueAuthors = ref([]);
 
-const getAuthors = () => {
-  return [... new Set(posts.value.map(post => post.userId))];
+const getAuthors = (data) => {
+  return [... new Set(data.map(post => post.userId))];
 }
+
+await getPosts().then(async(data) => {
+  posts.value = await data;
+  uniqueAuthors.value = getAuthors(await data);
+})
 
 </script>
 
@@ -25,7 +24,7 @@ const getAuthors = () => {
   <div class="flex flex-col">
     <button
         type="button"
-        @click="emit('form-open', 'create', getAuthors())"
+        @click="emit('form-open', 'create', uniqueAuthors)"
         class="ml-auto mr-0 self-end rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-400 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
     >
       Create new post
@@ -54,7 +53,7 @@ const getAuthors = () => {
             <template #content>
               <div class="flex flex-col">
                 <button
-                    @click="emit('form-open', 'edit', getAuthors())"
+                    @click="emit('form-open', 'edit', uniqueAuthors)"
                     class="p-2 my-0.5 hover:bg-gray-100"
                 >
                   Edit
