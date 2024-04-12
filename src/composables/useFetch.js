@@ -26,8 +26,20 @@ export default function useFetch() {
 		})
 	}
 
+	const getPost = async (id) => {
+		return await fetch(`https://jsonplaceholder.typicode.com/posts/${id}`)
+			.then((response) => {
+				if (!response.ok) {
+					throw response.status;
+				} else {
+					return response.json();
+				}
+			})
+	}
+
 	return {
 		getPosts,
+		getPost,
 		createPost,
 	}
 }

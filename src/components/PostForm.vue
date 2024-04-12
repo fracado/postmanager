@@ -7,7 +7,11 @@ const props = defineProps({
   isOpen: Boolean,
   type: String,
   authors: Array,
+  postId: Number || null,
 });
+
+const { createPost, getPost } = useFetch();
+const postId = props.postId;
 
 const formHeaders = {
   create: 'Create blog entry',
@@ -19,11 +23,17 @@ const submitButtonTexts = {
   edit: 'Save changes'
 };
 
-const { createPost } = useFetch();
-
 const postTitle = ref("");
 const postBody = ref("");
 const postAuthor = ref(null);
+
+if (postId) {
+  getPost(postId).then(async(data) => {
+    postTitle.value = await data.title;
+    postBody.value = await data.body;
+    postAuthor.value = await data.userId;
+  });
+}
 
 const emit = defineEmits(["form-close", "alert-show"]);
 

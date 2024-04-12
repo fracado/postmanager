@@ -11,10 +11,12 @@ let postAuthors = [];
 let alertType = "";
 let alertTitle = "";
 let alertText = "";
+let postId = null;
 
-const openForm = (type, authors) => {
+const openForm = (type, authors, id = null) => {
   formType = type;
   postAuthors = authors;
+  postId = id;
   isFormOpened.value = true;
 };
 
@@ -49,8 +51,21 @@ const closeAlert = () => {
       </template>
       <PostsList @form-open="openForm" />
     </Suspense>
-    <PostForm :isOpen="isFormOpened" :type="formType" :authors="postAuthors" @form-close="closeForm" @alert-show="showAlert" />
-    <AlertComponent :isShown="isAlertShown" :type="alertType" :title="alertTitle" :text="alertText" @alert-close="closeAlert" />
+    <PostForm
+        :isOpen="isFormOpened"
+        :type="formType"
+        :authors="postAuthors"
+        :id="postId"
+        @form-close="closeForm"
+        @alert-show="showAlert"
+    />
+    <AlertComponent
+        :isShown="isAlertShown"
+        :type="alertType"
+        :title="alertTitle"
+        :text="alertText"
+        @alert-close="closeAlert"
+    />
   </main>
 </template>
 

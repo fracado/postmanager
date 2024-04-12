@@ -53,7 +53,7 @@ await getPosts().then(async(data) => {
             <template #content>
               <div class="flex flex-col">
                 <button
-                    @click="emit('form-open', 'edit', uniqueAuthors)"
+                    @click="emit('form-open', 'edit', uniqueAuthors, post.id)"
                     class="p-2 my-0.5 hover:bg-gray-100"
                 >
                   Edit
