@@ -1,5 +1,6 @@
 <script setup>
 import { defineEmits, defineProps, ref, computed } from "vue";
+import useFetch from "@/composables/useFetch";
 import ModalDialog from "@/components/ModalDialog.vue";
 
 const props = defineProps({
@@ -17,6 +18,8 @@ const submitButtonTexts = {
   create: 'Create',
   edit: 'Save changes'
 };
+
+const { createPost } = useFetch();
 
 const postTitle = ref("");
 const postBody = ref("");
@@ -61,14 +64,23 @@ const validateField = (field) => {
   if (field === 'body') validateBody();
 };
 
-const submitForm = () => {
+const submitForm = async() => {
   errors.value = {};
   validateTitle();
   validateAuthor();
   validateBody();
 
   if (Object.values(errors.value).every((error) => error === null)) {
-    console.log('validation successful');
+    const formData = {
+      title: postTitle.value,
+      body: postBody.value,
+      userId: postAuthor.value,
+    }
+
+    await createPost(formData).then(() => {
+      console.log('post created');
+      closeModal();
+    });
   } else {
     console.log('validation failed');
   }
@@ -171,8 +183,10 @@ const submitForm = () => {
         >
           Close
         </button>
-        <button @click.stop="closeModal"
-                class="focus:outline-none px-4 bg-[#327AB7] p-3 ml-3 rounded-lg text-white hover:bg-opacity-90"
+        <button @click.stop="submitForm"
+                id="submit"
+          class="focus:outline-none px-4 bg-[#327AB7] p-3 ml-3 rounded-lg text-white hover:bg-opacity-90"
+
         >
           {{ submitButtonTexts[props.type] }}
         </button>
