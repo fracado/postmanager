@@ -64,11 +64,24 @@ export default function useFetch() {
 		})
 	}
 
+	const deletePost = async (id) => {
+		return await fetch(`https://jsonplaceholder.typicode.com/posts/${id}`, {
+			method: 'DELETE',
+		}).then((response) => {
+			if (!response.ok) {
+				throw response.status;
+			} else {
+				return response.json();
+			}
+		})
+	}
+
 	return {
 		getUsers,
 		getPosts,
 		getPost,
 		createPost,
 		updatePost,
+		deletePost,
 	}
 }
