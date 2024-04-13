@@ -128,7 +128,7 @@ const submitForm = async() => {
 </script>
 
 <template>
-  <ModalDialog :isOpen="props.isOpen">
+  <ModalDialog :is-open="props.isOpen">
     <form
       :id="`${props.type}-form`"
       class="bg-white rounded pt-2 pb-1"
@@ -138,95 +138,118 @@ const submitForm = async() => {
         <p class="text-2xl">
           {{ formHeaders[props.type] }}
         </p>
-        <div @click.stop="emit('form-close')" class="form-close cursor-pointer z-50">
-          <svg class="fill-current text-black" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
-            <path d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z"></path>
+        <div
+          class="form-close cursor-pointer z-50"
+          @click.stop="emit('form-close')"
+        >
+          <svg
+            class="fill-current text-black"
+            xmlns="http://www.w3.org/2000/svg"
+            width="18"
+            height="18"
+            viewBox="0 0 18 18"
+          >
+            <path d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z" />
           </svg>
         </div>
       </div>
       <hr class="h-px my-2 bg-gray-200 border-0">
       <div class="mb-4">
-        <label class="block text-sm mb-2" for="title">
+        <label
+          class="block text-sm mb-2"
+          for="title"
+        >
           Title
         </label>
         <input
-            class="border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none"
-            :class="{'border-red-500': errors.title && (!isTitlePresent || !isTitleValid)}"
-            id="title"
-            type="text"
-            v-model="postTitle"
-            @input="validateField('title')"
-            @blur="validateField('title')"
+          id="title"
+          v-model="postTitle"
+          class="border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none"
+          :class="{'border-red-500': errors.title && (!isTitlePresent || !isTitleValid)}"
+          type="text"
+          @input="validateField('title')"
+          @blur="validateField('title')"
         >
         <span
-            class="error float-end mt-2 text-red-500 text-xs"
-            v-if="errors.title && (!isTitlePresent || !isTitleValid)"
+          v-if="errors.title && (!isTitlePresent || !isTitleValid)"
+          class="error float-end mt-2 text-red-500 text-xs"
         >
           {{ errors.title }}
         </span>
       </div>
       <div class="mb-6">
-        <label class="block text-sm mb-2" for="author">
+        <label
+          class="block text-sm mb-2"
+          for="author"
+        >
           Author
         </label>
         <div class="relative">
           <select
-              class="block appearance-none w-full bg-white border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-              :class="{'border-red-500': errors.author && !isAuthorPresent}"
-              id="author"
-              v-model="postAuthor"
-              @blur="validateField('author')"
+            id="author"
+            v-model="postAuthor"
+            class="block appearance-none w-full bg-white border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+            :class="{'border-red-500': errors.author && !isAuthorPresent}"
+            @blur="validateField('author')"
           >
             <option
-                v-for="author in props.authors"
-                :key="author.id"
-                :value="author"
+              v-for="author in props.authors"
+              :key="author.id"
+              :value="author"
             >
               {{ author.name }}
             </option>
           </select>
           <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-            <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+            <svg
+              class="fill-current h-4 w-4"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+            ><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" /></svg>
           </div>
           <span
-              class="error float-end mt-2 text-red-500 text-xs"
-              v-if="errors.author && !isAuthorPresent"
+            v-if="errors.author && !isAuthorPresent"
+            class="error float-end mt-2 text-red-500 text-xs"
           >
-          {{ errors.author }}
-        </span>
+            {{ errors.author }}
+          </span>
         </div>
       </div>
       <div class="mb-7">
-        <label class="block text-sm mb-2" for="body">
+        <label
+          class="block text-sm mb-2"
+          for="body"
+        >
           Body
         </label>
         <textarea
-            rows="10"
-            class="border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none"
-            :class="{'border-red-500': errors.body && (!isBodyPresent || !isBodyValid)}"
-            id="body"
-            v-model="postBody"
-            @input="validateField('body')"
-            @blur="validateField('body')"
+          id="body"
+          v-model="postBody"
+          rows="10"
+          class="border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none"
+          :class="{'border-red-500': errors.body && (!isBodyPresent || !isBodyValid)}"
+          @input="validateField('body')"
+          @blur="validateField('body')"
         />
         <span
-            class="error float-end text-red-500 text-xs"
-            v-if="errors.body && (!isBodyPresent || !isBodyValid)"
+          v-if="errors.body && (!isBodyPresent || !isBodyValid)"
+          class="error float-end text-red-500 text-xs"
         >
           {{ errors.body }}
         </span>
       </div>
       <hr class="h-px my-2 bg-gray-200 border-0">
       <div class="flex justify-end pt-2">
-        <button @click.stop="closeForm"
-                class="border border-1 border-gray-600 form-close px-4 p-3 rounded-lg text-black hover:text-gray-600 hover:border-gray-400"
+        <button
+          class="border border-1 border-gray-600 form-close px-4 p-3 rounded-lg text-black hover:text-gray-600 hover:border-gray-400"
+          @click.stop="closeForm"
         >
           Close
         </button>
-        <button @click.stop="submitForm"
-                id="submit"
+        <button
+          id="submit"
           class="focus:outline-none px-4 bg-[#327AB7] p-3 ml-3 rounded-lg text-white hover:bg-opacity-90"
-
+          @click.stop="submitForm"
         >
           {{ submitButtonTexts[props.type] }}
         </button>

@@ -72,27 +72,27 @@ await getPosts().then(async(data) => {
                 id="menu"
                 class="bg-transparent py-2 px-4 rounded inline-flex items-center"
               >
-              <span class="mx-auto font-bold text-lg">&#xFE19;</span>
-            </button>
-            <template #content>
-              <div class="flex flex-col">
-                <button
+                <span class="mx-auto font-bold text-lg">&#xFE19;</span>
+              </button>
+              <template #content>
+                <div class="flex flex-col">
+                  <button
                     class="p-2 my-0.5 hover:bg-gray-100"
                     @click="emit('form-open', 'edit', users, post.id)"
-                >
-                  Edit
-                </button>
-                <button
+                  >
+                    Edit
+                  </button>
+                  <button
                     class="p-2 my-0.5 hover:bg-gray-100"
                     @click="emit('confirm-open', 'delete', post)"
-                >
-                  Delete
-                </button>
-              </div>
-            </template>
-          </Popper>
-        </td>
-      </tr>
+                  >
+                    Delete
+                  </button>
+                </div>
+              </template>
+            </Popper>
+          </td>
+        </tr>
       </tbody>
     </table>
   </div>

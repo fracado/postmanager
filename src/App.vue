@@ -66,31 +66,31 @@ const closeAlert = () => {
         <div>Loading...</div>
       </template>
       <PostsList
-          @form-open="openForm"
-          @confirm-open="openConfirmDialog"
+        @form-open="openForm"
+        @confirm-open="openConfirmDialog"
       />
     </Suspense>
     <PostForm
-        :isOpen="isFormOpened"
-        :type="formType"
-        :authors="postAuthors"
-        :id="postId"
-        @form-close="closeForm"
-        @alert-show="showAlert"
+      :id="postId"
+      :is-open="isFormOpened"
+      :type="formType"
+      :authors="postAuthors"
+      @form-close="closeForm"
+      @alert-show="showAlert"
     />
     <AlertComponent
-        :isShown="isAlertShown"
-        :type="alertType"
-        :title="alertTitle"
-        :text="alertText"
-        @alert-close="closeAlert"
+      :is-shown="isAlertShown"
+      :type="alertType"
+      :title="alertTitle"
+      :text="alertText"
+      @alert-close="closeAlert"
     />
     <ConfirmDialog
-        :isOpen="isConfirmDialogOpened"
-        :type="dialogType"
-        :post="postObj"
-        @confirm-close="closeConfirmDialog"
-        @alert-show="showAlert"
+      :is-open="isConfirmDialogOpened"
+      :type="dialogType"
+      :post="postObj"
+      @confirm-close="closeConfirmDialog"
+      @alert-show="showAlert"
     />
   </main>
 </template>
