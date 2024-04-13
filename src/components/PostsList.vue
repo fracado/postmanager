@@ -2,7 +2,7 @@
 import {defineEmits, ref} from 'vue';
 import useFetch from "@/composables/useFetch";
 
-const emit = defineEmits(["form-open"]);
+const emit = defineEmits(["form-open", "confirm-open"]);
 const tableHeaders = ["Title", "Description", "Author", ""];
 const { getPosts, getUsers } = useFetch();
 
@@ -33,25 +33,42 @@ await getPosts().then(async(data) => {
     >
       Create new post
     </button>
-    <table id="posts-list" class="table-auto border-collapse border border-slate-500 text-sm mt-6">
+    <table
+      id="posts-list"
+      class="table-auto border-collapse border border-slate-500 text-sm mt-6"
+    >
       <thead class="bg-gray-700 text-white">
-      <tr>
-        <th v-for="header in tableHeaders" :key='header' class="w-1/3 py-3 font-semibold">
-          {{header}}
-        </th>
-      </tr>
+        <tr>
+          <th
+            v-for="header in tableHeaders"
+            :key="header"
+            class="w-1/3 py-3 font-semibold"
+          >
+            {{ header }}
+          </th>
+        </tr>
       </thead>
       <tbody>
-      <tr v-for="post in posts" :key='post' class="odd:bg-white even:bg-gray-200">
-        <td class="text-center first-letter:uppercase py-3 px-2">{{post.title}}</td>
-        <td class="text-left first-letter:uppercase py-3 px-2">{{post.body}}</td>
-        <td class="text-center py-3 px-2">{{ users.find(user => user.id === post.userId).name }}
+        <tr
+          v-for="post in posts"
+          :key="post"
+          class="odd:bg-white even:bg-gray-200"
+        >
+          <td class="text-center first-letter:uppercase py-3 px-2">
+            {{ post.title }}
+          </td>
+          <td class="text-left first-letter:uppercase py-3 px-2">
+            {{ post.body }}
+          </td>
+          <td class="text-center py-3 px-2">
+            {{ users.find(user => user.id === post.userId ).name }}
           </td>
           <td class="text-center py-3 px-2">
             <Popper
               arrow
-              zIndex="inherit">
-            <button
+              z-index="inherit"
+            >
+              <button
                 id="menu"
                 class="bg-transparent py-2 px-4 rounded inline-flex items-center"
               >
@@ -60,12 +77,17 @@ await getPosts().then(async(data) => {
             <template #content>
               <div class="flex flex-col">
                 <button
-                    @click="emit('form-open', 'edit', users, post.id)"
                     class="p-2 my-0.5 hover:bg-gray-100"
+                    @click="emit('form-open', 'edit', users, post.id)"
                 >
                   Edit
                 </button>
-                <button class="p-2 hover:bg-gray-100">Delete</button>
+                <button
+                    class="p-2 my-0.5 hover:bg-gray-100"
+                    @click="emit('confirm-open', 'delete', post)"
+                >
+                  Delete
+                </button>
               </div>
             </template>
           </Popper>

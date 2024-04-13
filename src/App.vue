@@ -1,11 +1,14 @@
 <script setup>
 import AlertComponent from "@/components/AlertComponent.vue";
+import ConfirmDialog from "@/components/ConfirmDialog.vue";
 import PostsList from '@/components/PostsList.vue';
 import PostForm from '@/components/PostForm.vue';
 import {ref} from "vue";
 
 const isFormOpened = ref(false);
+const isConfirmDialogOpened = ref(false);
 const isAlertShown = ref(false);
+let dialogType = "";
 let formType = "";
 let postAuthors = [];
 let alertType = "";
@@ -13,6 +16,7 @@ let alertTitle = "";
 let alertText = "";
 
 const postId = ref(null);
+const postObj = ref(null);
 
 const openForm = (type, authors, id = null) => {
   formType = type;
@@ -25,11 +29,22 @@ const closeForm = () => {
   isFormOpened.value = false;
 };
 
+const openConfirmDialog = (type, post) => {
+  dialogType = type;
+  postObj.value = post;
+  isConfirmDialogOpened.value = true;
+};
+
+const closeConfirmDialog = () => {
+  isConfirmDialogOpened.value = false;
+};
+
 const showAlert = (type, title, text) => {
   alertType = type;
   alertTitle = title;
   alertText = text;
   isFormOpened.value = false;
+  isConfirmDialogOpened.value = false;
   isAlertShown.value = true;
 };
 
@@ -50,7 +65,10 @@ const closeAlert = () => {
       <template #fallback>
         <div>Loading...</div>
       </template>
-      <PostsList @form-open="openForm" />
+      <PostsList
+          @form-open="openForm"
+          @confirm-open="openConfirmDialog"
+      />
     </Suspense>
     <PostForm
         :isOpen="isFormOpened"
@@ -66,6 +84,13 @@ const closeAlert = () => {
         :title="alertTitle"
         :text="alertText"
         @alert-close="closeAlert"
+    />
+    <ConfirmDialog
+        :isOpen="isConfirmDialogOpened"
+        :type="dialogType"
+        :post="postObj"
+        @confirm-close="closeConfirmDialog"
+        @alert-show="showAlert"
     />
   </main>
 </template>
