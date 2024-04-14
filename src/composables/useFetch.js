@@ -1,4 +1,15 @@
 export default function useFetch() {
+	const getUsers = async () => {
+		return await fetch('https://jsonplaceholder.typicode.com/users')
+			.then((response) => {
+				if (!response.ok) {
+					throw response.status;
+				} else {
+					return response.json();
+				}
+			})
+	}
+
 	const getPosts = async () => {
 		return await fetch('https://jsonplaceholder.typicode.com/posts')
 			.then((response) => {
@@ -54,6 +65,7 @@ export default function useFetch() {
 	}
 
 	return {
+		getUsers,
 		getPosts,
 		getPost,
 		createPost,

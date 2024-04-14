@@ -50,7 +50,7 @@ onUpdated(() => {
     getPost(postId.value).then(async(data) => {
       postTitle.value = await data.title;
       postBody.value = await data.body;
-      postAuthor.value = await data.userId;
+      postAuthor.value = await props.authors.find((author) => author.id === data.userId);
     });
   }
 });
@@ -104,7 +104,7 @@ const submitForm = async() => {
     let formData = {
       title: postTitle.value,
       body: postBody.value,
-      userId: postAuthor.value,
+      userId: postAuthor.value?.id,
     }
 
     if (props.type === 'edit') {
@@ -178,11 +178,11 @@ const submitForm = async() => {
               @blur="validateField('author')"
           >
             <option
-                v-for="(author, index) in props.authors"
-                :key="index"
+                v-for="author in props.authors"
+                :key="author.id"
                 :value="author"
             >
-              User #{{ author }}
+              {{ author.name }}
             </option>
           </select>
           <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">

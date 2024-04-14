@@ -4,18 +4,22 @@ import useFetch from "@/composables/useFetch";
 
 const emit = defineEmits(["form-open"]);
 const tableHeaders = ["Title", "Description", "Author", ""];
-const { getPosts } = useFetch();
+const { getPosts, getUsers } = useFetch();
 
 const posts = ref(null);
-const uniqueAuthors = ref([]);
+const users = ref(null);
 
-const getAuthors = (data) => {
-  return [... new Set(data.map(post => post.userId))];
-}
+await getUsers().then(async(data) => {
+  users.value = await data.map((user) => {
+    return {
+      id: user.id,
+      name: user.username,
+    };
+  });
+});
 
 await getPosts().then(async(data) => {
   posts.value = await data;
-  uniqueAuthors.value = getAuthors(await data);
 })
 
 </script>
@@ -23,9 +27,9 @@ await getPosts().then(async(data) => {
 <template>
   <div class="flex flex-col">
     <button
-        type="button"
-        @click="emit('form-open', 'create', uniqueAuthors)"
-        class="ml-auto mr-0 self-end rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-400 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+      type="button"
+      class="ml-auto mr-0 self-end rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-400 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+      @click="emit('form-open', 'create', users)"
     >
       Create new post
     </button>
@@ -41,9 +45,12 @@ await getPosts().then(async(data) => {
       <tr v-for="post in posts" :key='post' class="odd:bg-white even:bg-gray-200">
         <td class="text-center first-letter:uppercase py-3 px-2">{{post.title}}</td>
         <td class="text-left first-letter:uppercase py-3 px-2">{{post.body}}</td>
-        <td class="text-center py-3 px-2">User #{{post.userId}}</td>
-        <td class="text-center py-3 px-2">
-          <Popper arrow zIndex="inherit">
+        <td class="text-center py-3 px-2">{{ users.find(user => user.id === post.userId).name }}
+          </td>
+          <td class="text-center py-3 px-2">
+            <Popper
+              arrow
+              zIndex="inherit">
             <button
                 id="menu"
                 class="bg-transparent py-2 px-4 rounded inline-flex items-center"
@@ -53,7 +60,7 @@ await getPosts().then(async(data) => {
             <template #content>
               <div class="flex flex-col">
                 <button
-                    @click="emit('form-open', 'edit', uniqueAuthors, post.id)"
+                    @click="emit('form-open', 'edit', users, post.id)"
                     class="p-2 my-0.5 hover:bg-gray-100"
                 >
                   Edit
