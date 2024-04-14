@@ -241,14 +241,14 @@ const submitForm = async() => {
       <hr class="h-px my-2 bg-gray-200 border-0">
       <div class="flex justify-end pt-2">
         <button
-          class="border border-1 border-gray-600 form-close px-4 p-3 rounded-lg text-black hover:text-gray-600 hover:border-gray-400"
+          class="border border-1 border-gray-600 form-close px-4 py-2 rounded-lg text-black text-base font-medium hover:text-gray-600 hover:border-gray-400"
           @click.stop="closeForm"
         >
           Close
         </button>
         <button
           id="submit"
-          class="focus:outline-none px-4 bg-[#327AB7] p-3 ml-3 rounded-lg text-white hover:bg-opacity-90"
+          class="focus:outline-none px-4 bg-[#327AB7] py-2 ml-3 rounded-lg text-white text-base font-medium hover:bg-opacity-90"
           @click.stop="submitForm"
         >
           {{ submitButtonTexts[props.type] }}
