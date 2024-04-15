@@ -68,6 +68,7 @@ const closeAlert = () => {
       <PostsList
         @form-open="openForm"
         @confirm-open="openConfirmDialog"
+        @alert-show="showAlert"
       />
     </Suspense>
     <PostForm

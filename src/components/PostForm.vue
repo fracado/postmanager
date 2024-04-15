@@ -51,6 +51,8 @@ onUpdated(() => {
       postTitle.value = await data.title;
       postBody.value = await data.body;
       postAuthor.value = await props.authors.find((author) => author.id === data.userId);
+    }).catch(() => {
+      emit('alert-show', 'error', 'Error!', 'Post loading failed.');
     });
   }
 });

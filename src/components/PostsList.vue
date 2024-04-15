@@ -2,7 +2,7 @@
 import {defineEmits, ref} from 'vue';
 import useFetch from "@/composables/useFetch";
 
-const emit = defineEmits(["form-open", "confirm-open"]);
+const emit = defineEmits(["form-open", "confirm-open", 'alert-show']);
 const tableHeaders = ["Title", "Description", "Author", ""];
 const { getPosts, getUsers } = useFetch();
 
@@ -16,11 +16,15 @@ await getUsers().then(async(data) => {
       name: user.username,
     };
   });
+}).catch(() => {
+  emit('alert-show', 'error', 'Error!', 'Users could not be loaded');
 });
 
 await getPosts().then(async(data) => {
   posts.value = await data;
-})
+}).catch(() => {
+  emit('alert-show', 'error', 'Error!', 'Posts could not be loaded.');
+});
 
 </script>
 
