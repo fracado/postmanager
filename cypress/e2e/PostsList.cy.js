@@ -34,14 +34,14 @@ describe('PostsList', () => {
 	});
 
 	it('opens the first edit post form', () => {
-		cy.get('button[id="menu"]').first().click() // open the menu
-		cy.get('button').contains('Edit').first().click() // click the "Edit" button
-		cy.get('form[id="edit-form"]').should('exist') // check if the edit post form is opened
+		cy.get('button[id="menu"]').first().click()
+		cy.get('button').contains('Edit').first().click()
+		cy.get('form[id="edit-form"]').should('exist')
 	})
 
 	it('opens the delete post confirmation', () => {
-		cy.get('button[id="menu"]').first().click() // open the menu
-		cy.get('button').contains('Delete').first().click() // click the first "Delete" button
+		cy.get('button[id="menu"]').first().click()
+		cy.get('button').contains('Delete').first().click()
 		cy.get('form[id="delete-form"]').should('exist')
 	})
 });

@@ -1,8 +1,8 @@
 describe('ConfirmDialog', () => {
 	beforeEach(() => {
 		cy.visit('/');
-		cy.get('button[id="menu"]').first().click() // open the menu
-		cy.get('button').contains('Delete').first().click() // click the first "Delete" button
+		cy.get('button[id="menu"]').first().click()
+		cy.get('button').contains('Delete').first().click()
 	})
 
 	describe('when deleting post', () => {
@@ -33,7 +33,6 @@ describe('ConfirmDialog', () => {
 
 			cy.wait('@deletePost')
 
-			// check if the error alert is shown
 			cy.contains('Error!').should('be.visible')
 			cy.contains('Post deletion failed.').should('be.visible')
 		})
@@ -43,7 +42,6 @@ describe('ConfirmDialog', () => {
 		it('closes the dialog', () => {
 			cy.get('button').contains('Cancel').click()
 
-			// check if the dialog is closed
 			cy.get('form[id="delete-form"]').should('not.exist')
 		})
 	})

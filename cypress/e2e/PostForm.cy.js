@@ -6,7 +6,6 @@ describe('PostForm', () => {
 		})
 
 		it('renders form fields', () => {
-			// check if form fields are rendered
 			cy.get('#title').should('exist')
 			cy.get('#author').should('exist')
 			cy.get('#body').should('exist')
@@ -25,14 +24,12 @@ describe('PostForm', () => {
 		})
 
 		it('submits the filled in form', () => {
-			// fill form fields
 			cy.get('#title').type('Test Title')
 			cy.get('#author').select('Bret')
 			cy.get('#body').type('Test Body')
 
 			cy.get('button[id="submit"]').click()
 
-			// check if the success alert is shown
 			cy.contains('Success!').should('be.visible')
 			cy.contains('Post created successfully.').should('be.visible')
 		})
@@ -42,7 +39,6 @@ describe('PostForm', () => {
 				statusCode: 500,
 			}).as('createPost')
 
-			// fill form fields
 			cy.get('#title').type('Test Title')
 			cy.get('#author').select('Bret')
 			cy.get('#body').type('Test Body')
@@ -51,7 +47,6 @@ describe('PostForm', () => {
 
 			cy.wait('@createPost')
 
-			// check if the error alert is shown
 			cy.contains('Error!').should('be.visible')
 			cy.contains('Post creation failed.').should('be.visible')
 		})
@@ -93,7 +88,6 @@ describe('PostForm', () => {
 
 			cy.get('button[id="submit"]').click()
 
-			// check if the success alert is shown
 			cy.contains('Success!').should('be.visible')
 			cy.contains('Post updated successfully.').should('be.visible')
 		})
@@ -111,7 +105,6 @@ it('shows error alert if submission fails', () => {
 
 			cy.wait('@updatePost')
 
-			// check if the error alert is shown
 			cy.contains('Error!').should('be.visible')
 			cy.contains('Post update failed.').should('be.visible')
 		})
